@@ -1,0 +1,69 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: edu-online
+
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/edu_online?useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai&useSSL=false
+    username: root
+    password: 123456
+
+  redis:
+    host: localhost
+    port: 6379
+    password:
+    database: 0
+    timeout: 3000ms
+    lettuce:
+      pool:
+        max-active: 8
+        max-wait: -1ms
+        max-idle: 8
+        min-idle: 0
+
+# MyBatis-Plus配置
+mybatis-plus:
+  mapper-locations: classpath:/mapper/*.xml
+  type-aliases-package: com.edu.modules.*.entity
+  configuration:
+    map-underscore-to-camel-case: true
+    cache-enabled: false
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+  global-config:
+    db-config:
+      logic-delete-field: deleted
+      logic-delete-value: 1
+      logic-not-delete-value: 0
+      table-prefix: tb_
+
+# JWT配置
+jwt:
+  secret: edu-online-secret-key-2024
+  expire: 604800000  # 7天，单位毫秒
+  header: Authorization
+  token-head: Bearer
+
+# OSS配置
+oss:
+  endpoint: https://oss-cn-hangzhou.aliyuncs.com
+  access-key-id: your-access-key-id
+  access-key-secret: your-access-key-secret
+  bucket-name: edu-online-bucket
+  domain: https://edu-online-bucket.oss-cn-hangzhou.aliyuncs.com
+
+# 日志配置
+logging:
+  level:
+    com.edu: info
+    org.springframework: info
+  pattern:
+    console: "%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n"
+
+# 文件上传配置
+file:
+  upload:
+    max-size: 50MB
+    allowed-types: jpg,jpeg,png,gif,mp4,avi,wmv,flv,webm,pdf,doc,docx,xls,xlsx,ppt,pptx
