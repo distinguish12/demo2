@@ -7,9 +7,9 @@ spring:
 
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/edu_online?useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai&useSSL=false
+    url: jdbc:mysql://192.168.190.132:3306/edu_online?useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai&useSSL=false
     username: root
-    password: 123456
+    password:
 
   redis:
     host: localhost
@@ -41,7 +41,7 @@ mybatis-plus:
 
 # JWT配置
 jwt:
-  secret: edu-online-secret-key-2024
+  secret: GvB7fGRvzaPmRlag9kHCj6jL6Tx2F+3iLirg+Y3MyXc=
   expire: 604800000  # 7天，单位毫秒
   header: Authorization
   token-head: Bearer
