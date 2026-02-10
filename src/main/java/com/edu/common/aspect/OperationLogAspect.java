@@ -24,7 +24,12 @@ public class OperationLogAspect {
     @Before("operationLog()")
     public void doBefore(JoinPoint joinPoint) {
 
+
+
         // 这里可以添加前置处理逻辑
+
+
+
     }
 
     @AfterReturning(pointcut = "operationLog()", returning = "result")
