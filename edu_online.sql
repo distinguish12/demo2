@@ -352,3 +352,118 @@ INSERT INTO tb_course_category (name, parent_id, sort_order) VALUES
 ('人工智能', 0, 2),
 ('机器学习', 5, 1),
 ('深度学习', 5, 2);
+
+-- ============================================
+-- 缺失的5张表（添加于2026-02-05）
+-- ============================================
+
+-- 文件信息表
+CREATE TABLE tb_file_info (
+    id BIGINT PRIMARY KEY AUTO_INCREMENT COMMENT '文件ID',
+    original_name VARCHAR(255) NOT NULL COMMENT '原始文件名',
+    file_name VARCHAR(255) NOT NULL COMMENT '存储文件名',
+    file_size BIGINT DEFAULT 0 COMMENT '文件大小（字节）',
+    file_type VARCHAR(100) COMMENT '文件类型',
+    file_extension VARCHAR(20) COMMENT '文件扩展名',
+    file_path VARCHAR(500) COMMENT '文件存储路径',
+    file_url VARCHAR(500) COMMENT '文件访问URL',
+    category TINYINT DEFAULT 5 COMMENT '分类：1-头像，2-课程封面，3-课时视频，4-练习附件，5-其他',
+    relation_id BIGINT COMMENT '关联ID',
+    upload_user_id BIGINT COMMENT '上传用户ID',
+    storage_type TINYINT DEFAULT 1 COMMENT '存储类型：1-本地，2-OSS',
+    status TINYINT DEFAULT 1 COMMENT '状态：0-禁用，1-启用',
+    create_time DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    update_time DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+    deleted TINYINT DEFAULT 0 COMMENT '逻辑删除：0-未删除，1-已删除',
+    INDEX idx_category (category),
+    INDEX idx_relation_id (relation_id),
+    INDEX idx_upload_user (upload_user_id),
+    INDEX idx_create_time (create_time)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='文件信息表';
+
+-- 角色表
+CREATE TABLE tb_role (
+    id BIGINT PRIMARY KEY AUTO_INCREMENT COMMENT '角色ID',
+    role_name VARCHAR(50) NOT NULL COMMENT '角色名称',
+    role_code VARCHAR(50) NOT NULL COMMENT '角色编码',
+    description VARCHAR(255) COMMENT '角色描述',
+    status TINYINT DEFAULT 1 COMMENT '状态：0-禁用，1-启用',
+    create_time DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    update_time DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+    deleted TINYINT DEFAULT 0 COMMENT '逻辑删除：0-未删除，1-已删除',
+    UNIQUE KEY uk_role_code (role_code),
+    INDEX idx_status (status)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='角色表';
+
+-- 权限表
+CREATE TABLE tb_permission (
+    id BIGINT PRIMARY KEY AUTO_INCREMENT COMMENT '权限ID',
+    perm_name VARCHAR(50) NOT NULL COMMENT '权限名称',
+    perm_code VARCHAR(50) NOT NULL COMMENT '权限编码',
+    resource VARCHAR(200) COMMENT '资源路径',
+    method VARCHAR(20) COMMENT '请求方法',
+    description VARCHAR(255) COMMENT '权限描述',
+    status TINYINT DEFAULT 1 COMMENT '状态：0-禁用，1-启用',
+    create_time DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    update_time DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+    deleted TINYINT DEFAULT 0 COMMENT '逻辑删除：0-未删除，1-已删除',
+    UNIQUE KEY uk_perm_code (perm_code),
+    INDEX idx_resource (resource),
+    INDEX idx_status (status)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='权限表';
+
+-- 用户角色关联表
+CREATE TABLE tb_user_role (
+    id BIGINT PRIMARY KEY AUTO_INCREMENT COMMENT 'ID',
+    user_id BIGINT NOT NULL COMMENT '用户ID',
+    role_id BIGINT NOT NULL COMMENT '角色ID',
+    create_time DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    FOREIGN KEY (user_id) REFERENCES tb_user(id),
+    FOREIGN KEY (role_id) REFERENCES tb_role(id),
+    UNIQUE KEY uk_user_role (user_id, role_id),
+    INDEX idx_user_id (user_id),
+    INDEX idx_role_id (role_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='用户角色关联表';
+
+-- 角色权限关联表
+CREATE TABLE tb_role_permission (
+    id BIGINT PRIMARY KEY AUTO_INCREMENT COMMENT 'ID',
+    role_id BIGINT NOT NULL COMMENT '角色ID',
+    permission_id BIGINT NOT NULL COMMENT '权限ID',
+    create_time DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    FOREIGN KEY (role_id) REFERENCES tb_role(id),
+    FOREIGN KEY (permission_id) REFERENCES tb_permission(id),
+    UNIQUE KEY uk_role_permission (role_id, permission_id),
+    INDEX idx_role_id (role_id),
+    INDEX idx_permission_id (permission_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='角色权限关联表';
+
+-- 插入默认角色数据
+INSERT INTO tb_role (role_name, role_code, description, status) VALUES
+('学生', 'ROLE_STUDENT', '学生角色，可以学习课程、参加考试、发表评价', 1),
+('讲师', 'ROLE_INSTRUCTOR', '讲师角色，可以创建课程、管理内容', 1),
+('管理员', 'ROLE_ADMIN', '管理员角色，拥有系统全部权限', 1);
+
+-- 插入默认权限数据（常用权限）
+INSERT INTO tb_permission (perm_name, perm_code, resource, method, description, status) VALUES
+('用户查看', 'USER_VIEW', '/api/users', 'GET', '查看用户信息', 1),
+('用户管理', 'USER_MANAGE', '/api/users', 'POST,PUT,DELETE', '管理用户', 1),
+('课程查看', 'COURSE_VIEW', '/api/courses', 'GET', '查看课程', 1),
+('课程管理', 'COURSE_MANAGE', '/api/courses', 'POST,PUT,DELETE', '管理课程', 1),
+('考试查看', 'EXAM_VIEW', '/api/exams', 'GET', '查看考试', 1),
+('考试管理', 'EXAM_MANAGE', '/api/exams', 'POST,PUT,DELETE', '管理考试', 1),
+('系统管理', 'SYSTEM_MANAGE', '/api/system', '*', '系统管理权限', 1);
+
+-- 为管理员角色分配所有权限
+INSERT INTO tb_role_permission (role_id, permission_id)
+SELECT r.id, p.id FROM tb_role r, tb_permission p WHERE r.role_code = 'ROLE_ADMIN';
+
+-- 为讲师角色分配课程、考试相关权限
+INSERT INTO tb_role_permission (role_id, permission_id)
+SELECT r.id, p.id FROM tb_role r, tb_permission p 
+WHERE r.role_code = 'ROLE_INSTRUCTOR' AND p.perm_code IN ('COURSE_VIEW', 'COURSE_MANAGE', 'EXAM_VIEW', 'EXAM_MANAGE');
+
+-- 为学生角色分配查看权限
+INSERT INTO tb_role_permission (role_id, permission_id)
+SELECT r.id, p.id FROM tb_role r, tb_permission p 
+WHERE r.role_code = 'ROLE_STUDENT' AND p.perm_code IN ('USER_VIEW', 'COURSE_VIEW', 'EXAM_VIEW');
