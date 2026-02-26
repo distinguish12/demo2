@@ -89,9 +89,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
      * 判断是否跳过认证
      */
     private boolean isSkipAuth(String requestURI) {
-        // 登录、注册接口跳过认证
+        // 登录、注册、健康检查接口跳过认证
         if (requestURI.startsWith("/api/auth/login") ||
             requestURI.startsWith("/api/auth/register") ||
+            requestURI.startsWith("/api/health") ||
             requestURI.startsWith("/swagger") ||
             requestURI.startsWith("/v2/api-docs") ||
             requestURI.startsWith("/webjars") ||
