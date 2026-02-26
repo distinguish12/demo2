@@ -84,6 +84,14 @@
 
 ## 🔗 核心API接口
 
+### 健康检查接口
+```
+GET    /api/health            # 基础健康检查
+GET    /api/health/detail     # 详细健康状态（JVM、系统信息）
+GET    /api/health/ready      # 就绪检查（K8s就绪探针）
+GET    /api/health/liveness   # 存活检查（K8s存活探针）
+```
+
 ### 用户认证接口
 ```
 POST   /api/auth/login         # 用户登录
@@ -373,6 +381,10 @@ mvn test -Dtest=ExamModuleTest
 4. JDK版本是否为8+
 
 ## 📅 更新日志
+
+### v1.2.0 (2026-02-26)
+- 新增健康检查模块（支持 K8s 探针）
+- 添加 JVM 和系统信息监控接口
 
 ### v1.1.0 (2026-02-10)
 - 新增系统管理模块（RBAC 权限管理、操作日志、数据统计）
