@@ -10,6 +10,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.mock.web.MockMultipartFile;
 
 import java.io.ByteArrayInputStream;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -39,11 +40,10 @@ public class FileModuleTest {
         String content = "这是一个测试文件内容";
         ByteArrayInputStream inputStream = new ByteArrayInputStream(content.getBytes());
         MockMultipartFile mockFile = new MockMultipartFile(
-            "test.txt",
-            "test.txt",
-            "text/plain",
-            inputStream
-        );
+                "test.txt",
+                "test.txt",
+                "text/plain",
+                inputStream);
 
         try {
             // 测试上传头像文件
@@ -83,14 +83,14 @@ public class FileModuleTest {
     @Test
     public void testFileTypeValidation() {
         // 测试有效文件类型
-        String[] validExtensions = {"jpg", "png", "mp4", "pdf", "docx"};
+        String[] validExtensions = { "jpg", "png", "mp4", "pdf", "docx" };
         for (String ext : validExtensions) {
             boolean isValid = fileService.isValidFileType(ext);
             System.out.println("文件类型 " + ext + " 验证: " + (isValid ? "有效" : "无效"));
         }
 
         // 测试无效文件类型
-        String[] invalidExtensions = {"exe", "bat", "com", "scr"};
+        String[] invalidExtensions = { "exe", "bat", "com", "scr" };
         for (String ext : invalidExtensions) {
             boolean isValid = fileService.isValidFileType(ext);
             System.out.println("文件类型 " + ext + " 验证: " + (isValid ? "有效（错误）" : "无效（正确）"));
@@ -103,14 +103,14 @@ public class FileModuleTest {
     @Test
     public void testFileSizeValidation() {
         // 测试有效文件大小
-        long[] validSizes = {1024, 1024 * 1024, 10 * 1024 * 1024, 50 * 1024 * 1024}; // 1KB, 1MB, 10MB, 50MB
+        long[] validSizes = { 1024, 1024 * 1024, 10 * 1024 * 1024, 50 * 1024 * 1024 }; // 1KB, 1MB, 10MB, 50MB
         for (long size : validSizes) {
             boolean isValid = fileService.isValidFileSize(size);
             System.out.println("文件大小 " + size + " 字节验证: " + (isValid ? "有效" : "无效"));
         }
 
         // 测试无效文件大小
-        long[] invalidSizes = {60 * 1024 * 1024, 100 * 1024 * 1024}; // 60MB, 100MB
+        long[] invalidSizes = { 60 * 1024 * 1024, 100 * 1024 * 1024 }; // 60MB, 100MB
         for (long size : invalidSizes) {
             boolean isValid = fileService.isValidFileSize(size);
             System.out.println("文件大小 " + size + " 字节验证: " + (isValid ? "有效（错误）" : "无效（正确）"));
@@ -133,15 +133,15 @@ public class FileModuleTest {
         System.out.println("文件名唯一性: " + (!uniqueName1.equals(uniqueName2) ? "通过" : "失败"));
 
         // 测试文件扩展名提取
-        String[] testFiles = {"document.pdf", "image.jpg", "video.mp4", "noextension"};
+        String[] testFiles = { "document.pdf", "image.jpg", "video.mp4", "noextension" };
         for (String file : testFiles) {
             String extension = fileService.getFileExtension(file);
             System.out.println("文件 " + file + " 的扩展名: " + extension);
         }
 
         // 测试分类路径生成
-        Integer[] categories = {1, 2, 3, 4, 5};
-        String[] expectedPaths = {"avatar/", "course/", "lesson/", "exercise/", "other/"};
+        Integer[] categories = { 1, 2, 3, 4, 5 };
+        String[] expectedPaths = { "avatar/", "course/", "lesson/", "exercise/", "other/" };
 
         for (int i = 0; i < categories.length; i++) {
             String path = fileService.getCategoryPath(categories[i]);
@@ -171,7 +171,7 @@ public class FileModuleTest {
             System.out.println("上传文件2: " + fileInfo2.getFileUrl());
 
             // 批量删除文件
-            List<String> fileUrls = List.of(fileInfo1.getFileUrl(), fileInfo2.getFileUrl());
+            List<String> fileUrls = Arrays.asList(fileInfo1.getFileUrl(), fileInfo2.getFileUrl());
             boolean batchDeleteResult = fileService.deleteFiles(fileUrls);
             System.out.println("批量删除结果: " + (batchDeleteResult ? "成功" : "失败"));
 
@@ -215,7 +215,7 @@ public class FileModuleTest {
             String coverContent = "这是课程封面图片内容";
             ByteArrayInputStream coverStream = new ByteArrayInputStream(coverContent.getBytes());
             MockMultipartFile coverFile = new MockMultipartFile(
-                "cover.jpg", "cover.jpg", "image/jpeg", coverStream);
+                    "cover.jpg", "cover.jpg", "image/jpeg", coverStream);
 
             FileInfo coverFileInfo = fileService.uploadFile(coverFile, 2, createdCourse.getId());
             System.out.println("✓ 上传课程封面成功: " + coverFileInfo.getFileUrl());
@@ -224,7 +224,7 @@ public class FileModuleTest {
             String videoContent = "这是课时视频内容";
             ByteArrayInputStream videoStream = new ByteArrayInputStream(videoContent.getBytes());
             MockMultipartFile videoFile = new MockMultipartFile(
-                "lesson.mp4", "lesson.mp4", "video/mp4", videoStream);
+                    "lesson.mp4", "lesson.mp4", "video/mp4", videoStream);
 
             FileInfo videoFileInfo = fileService.uploadFile(videoFile, 3, 1L); // 假设课时ID为1
             System.out.println("✓ 上传课时视频成功: " + videoFileInfo.getFileUrl());
@@ -236,8 +236,8 @@ public class FileModuleTest {
             // 5. 验证文件信息
             for (FileInfo file : courseFiles) {
                 System.out.println("  文件: " + file.getOriginalName() +
-                                 ", 大小: " + file.getFileSize() + " 字节" +
-                                 ", 类型: " + file.getFileType());
+                        ", 大小: " + file.getFileSize() + " 字节" +
+                        ", 类型: " + file.getFileType());
             }
 
             // 6. 获取文件访问URL

@@ -17,6 +17,7 @@ import org.springframework.util.StringUtils;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -137,7 +138,7 @@ public class ExerciseSubmissionServiceImpl extends ServiceImpl<ExerciseSubmissio
     @Override
     public List<ExerciseSubmission> getExerciseSubmissions(Long exerciseId) {
         if (exerciseId == null) {
-            return List.of();
+            return Collections.emptyList();
         }
 
         LambdaQueryWrapper<ExerciseSubmission> wrapper = new LambdaQueryWrapper<>();
@@ -150,7 +151,7 @@ public class ExerciseSubmissionServiceImpl extends ServiceImpl<ExerciseSubmissio
     @Override
     public List<ExerciseSubmission> getUserSubmissions(Long userId) {
         if (userId == null) {
-            return List.of();
+            return Collections.emptyList();
         }
 
         LambdaQueryWrapper<ExerciseSubmission> wrapper = new LambdaQueryWrapper<>();

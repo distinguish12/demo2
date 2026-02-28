@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import java.math.BigDecimal;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -83,14 +84,14 @@ public class ExerciseServiceImpl extends ServiceImpl<ExerciseMapper, Exercise> i
     @Override
     public List<Exercise> getExercisesByCourseId(Long courseId) {
         if (courseId == null) {
-            return List.of();
+            return Collections.emptyList();
         }
 
         LambdaQueryWrapper<Exercise> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(Exercise::getCourseId, courseId)
-               .eq(Exercise::getStatus, 1) // 只查询启用的练习题
-               .orderByAsc(Exercise::getSortOrder)
-               .orderByAsc(Exercise::getCreateTime);
+                .eq(Exercise::getStatus, 1) // 只查询启用的练习题
+                .orderByAsc(Exercise::getSortOrder)
+                .orderByAsc(Exercise::getCreateTime);
 
         return list(wrapper);
     }
@@ -98,14 +99,14 @@ public class ExerciseServiceImpl extends ServiceImpl<ExerciseMapper, Exercise> i
     @Override
     public List<Exercise> getExercisesByChapterId(Long chapterId) {
         if (chapterId == null) {
-            return List.of();
+            return Collections.emptyList();
         }
 
         LambdaQueryWrapper<Exercise> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(Exercise::getChapterId, chapterId)
-               .eq(Exercise::getStatus, 1) // 只查询启用的练习题
-               .orderByAsc(Exercise::getSortOrder)
-               .orderByAsc(Exercise::getCreateTime);
+                .eq(Exercise::getStatus, 1) // 只查询启用的练习题
+                .orderByAsc(Exercise::getSortOrder)
+                .orderByAsc(Exercise::getCreateTime);
 
         return list(wrapper);
     }
@@ -122,10 +123,12 @@ public class ExerciseServiceImpl extends ServiceImpl<ExerciseMapper, Exercise> i
             case 2: // 多选题
             case 3: // 判断题
                 return userAnswer.trim().equalsIgnoreCase(correctAnswer.trim())
-                       ? BigDecimal.ONE : BigDecimal.ZERO;
+                        ? BigDecimal.ONE
+                        : BigDecimal.ZERO;
             case 4: // 填空题（简单文本匹配）
                 return userAnswer.trim().equalsIgnoreCase(correctAnswer.trim())
-                       ? BigDecimal.ONE : BigDecimal.ZERO;
+                        ? BigDecimal.ONE
+                        : BigDecimal.ZERO;
             default:
                 return BigDecimal.ZERO;
         }

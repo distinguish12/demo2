@@ -12,6 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -71,7 +72,7 @@ public class DiscussionReplyServiceImpl extends ServiceImpl<DiscussionReplyMappe
     @Override
     public List<DiscussionReply> getRepliesByDiscussionId(Long discussionId) {
         if (discussionId == null) {
-            return List.of();
+            return Collections.emptyList();
         }
 
         LambdaQueryWrapper<DiscussionReply> wrapper = new LambdaQueryWrapper<>();

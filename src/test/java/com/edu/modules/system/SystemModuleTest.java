@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -95,7 +96,8 @@ public class SystemModuleTest {
         System.out.println("权限创建成功: " + createdPermission.getPermName());
 
         // 为角色分配权限
-        boolean assignResult = rolePermissionService.assignPermissionToRole(createdRole.getId(), createdPermission.getId());
+        boolean assignResult = rolePermissionService.assignPermissionToRole(createdRole.getId(),
+                createdPermission.getId());
         System.out.println("权限分配结果: " + assignResult);
 
         // 查询角色的权限
@@ -226,7 +228,7 @@ public class SystemModuleTest {
         Permission createdPerm2 = rolePermissionService.createPermission(perm2);
 
         // 批量分配权限
-        List<Long> permissionIds = List.of(createdPerm1.getId(), createdPerm2.getId());
+        List<Long> permissionIds = Arrays.asList(createdPerm1.getId(), createdPerm2.getId());
         boolean batchAssignResult = rolePermissionService.assignPermissionsToRole(createdRole.getId(), permissionIds);
         System.out.println("批量权限分配结果: " + batchAssignResult);
 

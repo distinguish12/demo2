@@ -22,6 +22,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
@@ -202,7 +203,7 @@ public class FileServiceImpl extends ServiceImpl<FileInfoMapper, FileInfo> imple
     @Override
     public List<FileInfo> getFilesByRelationId(Long relationId, Integer category) {
         if (relationId == null) {
-            return List.of();
+            return Collections.emptyList();
         }
 
         LambdaQueryWrapper<FileInfo> wrapper = new LambdaQueryWrapper<>();

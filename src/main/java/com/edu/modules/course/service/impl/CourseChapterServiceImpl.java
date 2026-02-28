@@ -11,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -77,13 +78,13 @@ public class CourseChapterServiceImpl extends ServiceImpl<CourseChapterMapper, C
     @Override
     public List<CourseChapter> getChaptersByCourseId(Long courseId) {
         if (courseId == null) {
-            return List.of();
+            return Collections.emptyList();
         }
 
         LambdaQueryWrapper<CourseChapter> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(CourseChapter::getCourseId, courseId)
-               .orderByAsc(CourseChapter::getSortOrder)
-               .orderByAsc(CourseChapter::getCreateTime);
+                .orderByAsc(CourseChapter::getSortOrder)
+                .orderByAsc(CourseChapter::getCreateTime);
 
         return list(wrapper);
     }

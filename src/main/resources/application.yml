@@ -1,16 +1,32 @@
 server:
   port: 8080
+  servlet:
+    context-path: /
+    encoding:
+      charset: UTF-8
+      enabled: true
+      force: true
 
 spring:
   application:
     name: edu-online
 
+  # 数据源配置 - 本地MySQL
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://192.168.190.132:3306/edu_online?useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai&useSSL=false
+    url: jdbc:mysql://localhost:3306/edu_online?useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai&useSSL=false&allowPublicKeyRetrieval=true
     username: root
     password:
+    hikari:
+      minimum-idle: 5
+      maximum-pool-size: 20
+      auto-commit: true
+      idle-timeout: 600000
+      max-lifetime: 1800000
+      connection-timeout: 30000
+      connection-test-query: SELECT 1
 
+  # Redis配置 - 本地Redis
   redis:
     host: localhost
     port: 6379
@@ -23,6 +39,26 @@ spring:
         max-wait: -1ms
         max-idle: 8
         min-idle: 0
+        time-between-eviction-runs: 60000ms
+
+  # Jackson配置
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
+    serialization:
+      write-dates-as-timestamps: false
+
+  # 文件上传配置
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 50MB
+      max-request-size: 50MB
+      file-size-threshold: 0
+
+  # 资源配置
+  resources:
+    static-locations: classpath:/static/,classpath:/public/,file:${file.upload.path}
 
 # MyBatis-Plus配置
 mybatis-plus:
@@ -32,12 +68,15 @@ mybatis-plus:
     map-underscore-to-camel-case: true
     cache-enabled: false
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+    jdbc-type-for-null: NULL
+    call-setters-on-nulls: true
   global-config:
     db-config:
       logic-delete-field: deleted
       logic-delete-value: 1
       logic-not-delete-value: 0
       table-prefix: tb_
+      id-type: auto
 
 # JWT配置
 jwt:
@@ -45,25 +84,65 @@ jwt:
   expire: 604800000  # 7天，单位毫秒
   header: Authorization
   token-head: Bearer
+  refresh-expire: 1209600000  # 14天，刷新令牌过期时间
+
+# Swagger配置
+swagger:
+  enabled: true
+  title: Edu Online API
+  description: 在线学习平台接口文档
+  version: 1.0.0
+  contact:
+    name: Edu Online Team
+  base-package: com.edu.modules
 
 # OSS配置
 oss:
+  enabled: false  # false使用本地存储，true使用OSS存储
   endpoint: https://oss-cn-hangzhou.aliyuncs.com
   access-key-id: your-access-key-id
   access-key-secret: your-access-key-secret
   bucket-name: edu-online-bucket
   domain: https://edu-online-bucket.oss-cn-hangzhou.aliyuncs.com
 
+# 本地文件存储配置
+file:
+  upload:
+    path: D:/JavaWebProject/demo2/uploads
+    max-size: 50MB
+    allowed-types: jpg,jpeg,png,gif,mp4,avi,wmv,flv,webm,pdf,doc,docx,xls,xlsx,ppt,pptx
+    url-prefix: /file
+
 # 日志配置
 logging:
   level:
-    com.edu: info
+    com.edu: debug
+    com.edu.modules: debug
     org.springframework: info
+    org.mybatis: debug
   pattern:
-    console: "%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n"
+    console: "%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n"
+    file: "%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n"
+  file:
+    name: logs/edu-online.log
+    max-size: 100MB
+    max-history: 30
 
-# 文件上传配置
-file:
-  upload:
-    max-size: 50MB
-    allowed-types: jpg,jpeg,png,gif,mp4,avi,wmv,flv,webm,pdf,doc,docx,xls,xlsx,ppt,pptx
+# 业务配置
+business:
+  # 课程配置
+  course:
+    default-cover: /static/images/default-course-cover.jpg
+    page-size: 10
+  # 考试配置
+  exam:
+    submit-timeout: 60  # 提交超时时间（分钟）
+    auto-grade: true
+  # 讨论区配置
+  discussion:
+    page-size: 10
+    max-reply-depth: 3
+  # 评价配置
+  review:
+    page-size: 10
+    allow-anonymous: true

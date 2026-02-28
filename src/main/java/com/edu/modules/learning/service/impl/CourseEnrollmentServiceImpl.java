@@ -12,6 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -58,8 +59,8 @@ public class CourseEnrollmentServiceImpl extends ServiceImpl<CourseEnrollmentMap
 
         LambdaUpdateWrapper<CourseEnrollment> wrapper = new LambdaUpdateWrapper<>();
         wrapper.eq(CourseEnrollment::getUserId, userId)
-               .eq(CourseEnrollment::getCourseId, courseId)
-               .set(CourseEnrollment::getStatus, 0); // 取消状态
+                .eq(CourseEnrollment::getCourseId, courseId)
+                .set(CourseEnrollment::getStatus, 0); // 取消状态
 
         boolean success = update(wrapper);
         if (success) {
@@ -76,8 +77,8 @@ public class CourseEnrollmentServiceImpl extends ServiceImpl<CourseEnrollmentMap
 
         LambdaQueryWrapper<CourseEnrollment> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(CourseEnrollment::getUserId, userId)
-               .eq(CourseEnrollment::getCourseId, courseId)
-               .eq(CourseEnrollment::getStatus, 1); // 正常状态
+                .eq(CourseEnrollment::getCourseId, courseId)
+                .eq(CourseEnrollment::getStatus, 1); // 正常状态
 
         return count(wrapper) > 0;
     }
@@ -85,13 +86,13 @@ public class CourseEnrollmentServiceImpl extends ServiceImpl<CourseEnrollmentMap
     @Override
     public List<CourseEnrollment> getUserEnrollments(Long userId) {
         if (userId == null) {
-            return List.of();
+            return Collections.emptyList();
         }
 
         LambdaQueryWrapper<CourseEnrollment> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(CourseEnrollment::getUserId, userId)
-               .eq(CourseEnrollment::getStatus, 1) // 正常状态
-               .orderByDesc(CourseEnrollment::getEnrollTime);
+                .eq(CourseEnrollment::getStatus, 1) // 正常状态
+                .orderByDesc(CourseEnrollment::getEnrollTime);
 
         return list(wrapper);
     }
@@ -99,13 +100,13 @@ public class CourseEnrollmentServiceImpl extends ServiceImpl<CourseEnrollmentMap
     @Override
     public List<CourseEnrollment> getCourseEnrollments(Long courseId) {
         if (courseId == null) {
-            return List.of();
+            return Collections.emptyList();
         }
 
         LambdaQueryWrapper<CourseEnrollment> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(CourseEnrollment::getCourseId, courseId)
-               .eq(CourseEnrollment::getStatus, 1) // 正常状态
-               .orderByDesc(CourseEnrollment::getEnrollTime);
+                .eq(CourseEnrollment::getStatus, 1) // 正常状态
+                .orderByDesc(CourseEnrollment::getEnrollTime);
 
         return list(wrapper);
     }
@@ -118,7 +119,7 @@ public class CourseEnrollmentServiceImpl extends ServiceImpl<CourseEnrollmentMap
 
         LambdaQueryWrapper<CourseEnrollment> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(CourseEnrollment::getCourseId, courseId)
-               .eq(CourseEnrollment::getStatus, 1); // 正常状态
+                .eq(CourseEnrollment::getStatus, 1); // 正常状态
 
         return (int) count(wrapper);
     }

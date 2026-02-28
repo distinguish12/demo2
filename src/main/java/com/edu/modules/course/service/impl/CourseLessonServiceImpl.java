@@ -11,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -83,13 +84,13 @@ public class CourseLessonServiceImpl extends ServiceImpl<CourseLessonMapper, Cou
     @Override
     public List<CourseLesson> getLessonsByChapterId(Long chapterId) {
         if (chapterId == null) {
-            return List.of();
+            return Collections.emptyList();
         }
 
         LambdaQueryWrapper<CourseLesson> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(CourseLesson::getChapterId, chapterId)
-               .orderByAsc(CourseLesson::getSortOrder)
-               .orderByAsc(CourseLesson::getCreateTime);
+                .orderByAsc(CourseLesson::getSortOrder)
+                .orderByAsc(CourseLesson::getCreateTime);
 
         return list(wrapper);
     }
@@ -97,12 +98,12 @@ public class CourseLessonServiceImpl extends ServiceImpl<CourseLessonMapper, Cou
     @Override
     public List<CourseLesson> getLessonsByCourseId(Long courseId) {
         if (courseId == null) {
-            return List.of();
+            return Collections.emptyList();
         }
 
         // 这里需要关联查询，先通过章节表获取课时
         // 暂时返回空列表，后续完善
-        return List.of();
+        return Collections.emptyList();
     }
 
     @Override

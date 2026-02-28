@@ -384,7 +384,8 @@ mvn test -Dtest=ExamModuleTest
 
 ### v1.2.0 (2026-02-26)
 - 新增健康检查模块（支持 K8s 探针）
-- 添加 JVM 和系统信息监控接口
+- 添加 JVM 和系统 information 监控接口
+- 优化项目对 JDK 8 的兼容性
 
 ### v1.1.0 (2026-02-10)
 - 新增系统管理模块（RBAC 权限管理、操作日志、数据统计）
@@ -395,7 +396,7 @@ mvn test -Dtest=ExamModuleTest
 ### v1.0.0
 - 初始版本发布
 - 完成用户认证、课程管理、学习、考试、讨论、评价、文件服务等核心模块
+
 ## 📄 开源协议
 
-本项目采用 MIT 许可证。</content>
-<parameter name="filePath">D:\JavaProject\demo2\README.md
+本项目采用 MIT 许可证。

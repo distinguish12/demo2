@@ -15,6 +15,7 @@ import org.springframework.util.StringUtils;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -35,8 +36,8 @@ public class CourseReviewServiceImpl extends ServiceImpl<CourseReviewMapper, Cou
             throw new BusinessException(ResultCode.VALIDATION_ERROR, "用户ID不能为空");
         }
         if (review.getRating() == null ||
-            review.getRating().compareTo(BigDecimal.ONE) < 0 ||
-            review.getRating().compareTo(BigDecimal.valueOf(5)) > 0) {
+                review.getRating().compareTo(BigDecimal.ONE) < 0 ||
+                review.getRating().compareTo(BigDecimal.valueOf(5)) > 0) {
             throw new BusinessException(ResultCode.VALIDATION_ERROR, "评分必须在1-5之间");
         }
 
@@ -114,13 +115,13 @@ public class CourseReviewServiceImpl extends ServiceImpl<CourseReviewMapper, Cou
     @Override
     public List<CourseReview> getReviewsByCourseId(Long courseId) {
         if (courseId == null) {
-            return List.of();
+            return Collections.emptyList();
         }
 
         LambdaQueryWrapper<CourseReview> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(CourseReview::getCourseId, courseId)
-               .eq(CourseReview::getStatus, 1) // 只查询显示状态的评价
-               .orderByDesc(CourseReview::getCreateTime);
+                .eq(CourseReview::getStatus, 1) // 只查询显示状态的评价
+                .orderByDesc(CourseReview::getCreateTime);
 
         return list(wrapper);
     }
@@ -128,12 +129,12 @@ public class CourseReviewServiceImpl extends ServiceImpl<CourseReviewMapper, Cou
     @Override
     public List<CourseReview> getReviewsByUserId(Long userId) {
         if (userId == null) {
-            return List.of();
+            return Collections.emptyList();
         }
 
         LambdaQueryWrapper<CourseReview> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(CourseReview::getUserId, userId)
-               .orderByDesc(CourseReview::getCreateTime);
+                .orderByDesc(CourseReview::getCreateTime);
 
         return list(wrapper);
     }
@@ -146,7 +147,7 @@ public class CourseReviewServiceImpl extends ServiceImpl<CourseReviewMapper, Cou
 
         LambdaQueryWrapper<CourseReview> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(CourseReview::getUserId, userId)
-               .eq(CourseReview::getCourseId, courseId);
+                .eq(CourseReview::getCourseId, courseId);
 
         return count(wrapper) > 0;
     }
@@ -242,7 +243,7 @@ public class CourseReviewServiceImpl extends ServiceImpl<CourseReviewMapper, Cou
         try {
             return (Long) org.springframework.web.context.request.RequestContextHolder
                     .currentRequestAttributes().getAttribute("userId",
-                    org.springframework.web.context.request.RequestAttributes.SCOPE_REQUEST);
+                            org.springframework.web.context.request.RequestAttributes.SCOPE_REQUEST);
         } catch (Exception e) {
             return null;
         }

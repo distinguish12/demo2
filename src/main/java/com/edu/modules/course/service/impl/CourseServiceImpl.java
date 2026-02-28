@@ -12,6 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -89,12 +90,12 @@ public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> impleme
     @Override
     public List<Course> getCoursesByInstructor(Long instructorId) {
         if (instructorId == null) {
-            return List.of();
+            return Collections.emptyList();
         }
 
         LambdaQueryWrapper<Course> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(Course::getInstructorId, instructorId)
-               .orderByDesc(Course::getCreateTime);
+                .orderByDesc(Course::getCreateTime);
 
         return list(wrapper);
     }
@@ -102,13 +103,13 @@ public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> impleme
     @Override
     public List<Course> getCoursesByCategory(Long categoryId) {
         if (categoryId == null) {
-            return List.of();
+            return Collections.emptyList();
         }
 
         LambdaQueryWrapper<Course> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(Course::getCategoryId, categoryId)
-               .eq(Course::getStatus, 1) // 只查询发布状态的课程
-               .orderByDesc(Course::getCreateTime);
+                .eq(Course::getStatus, 1) // 只查询发布状态的课程
+                .orderByDesc(Course::getCreateTime);
 
         return list(wrapper);
     }
@@ -121,7 +122,7 @@ public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> impleme
 
         LambdaUpdateWrapper<Course> wrapper = new LambdaUpdateWrapper<>();
         wrapper.eq(Course::getId, courseId)
-               .set(Course::getStatus, 1); // 发布状态
+                .set(Course::getStatus, 1); // 发布状态
 
         boolean success = update(wrapper);
         if (success) {
@@ -138,7 +139,7 @@ public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> impleme
 
         LambdaUpdateWrapper<Course> wrapper = new LambdaUpdateWrapper<>();
         wrapper.eq(Course::getId, courseId)
-               .set(Course::getStatus, 2); // 下架状态
+                .set(Course::getStatus, 2); // 下架状态
 
         boolean success = update(wrapper);
         if (success) {
@@ -155,8 +156,8 @@ public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> impleme
 
         LambdaQueryWrapper<Course> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(Course::getStatus, 1) // 只查询发布状态的课程
-               .orderByDesc(Course::getStudentCount) // 按学员数量排序
-               .last("limit " + limit);
+                .orderByDesc(Course::getStudentCount) // 按学员数量排序
+                .last("limit " + limit);
 
         return list(wrapper);
     }
@@ -164,15 +165,15 @@ public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> impleme
     @Override
     public List<Course> searchCourses(String keyword) {
         if (!StringUtils.hasText(keyword)) {
-            return List.of();
+            return Collections.emptyList();
         }
 
         LambdaQueryWrapper<Course> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(Course::getStatus, 1) // 只查询发布状态的课程
-               .like(Course::getTitle, keyword)
-               .or()
-               .like(Course::getDescription, keyword)
-               .orderByDesc(Course::getCreateTime);
+                .like(Course::getTitle, keyword)
+                .or()
+                .like(Course::getDescription, keyword)
+                .orderByDesc(Course::getCreateTime);
 
         return list(wrapper);
     }

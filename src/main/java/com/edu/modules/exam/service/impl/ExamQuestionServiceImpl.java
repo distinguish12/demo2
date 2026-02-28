@@ -8,6 +8,7 @@ import com.edu.modules.exam.service.ExamQuestionService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -43,7 +44,7 @@ public class ExamQuestionServiceImpl extends ServiceImpl<ExamQuestionMapper, Exa
     @Override
     public List<ExamQuestion> getQuestionsByExamId(Long examId) {
         if (examId == null) {
-            return List.of();
+            return Collections.emptyList();
         }
 
         LambdaQueryWrapper<ExamQuestion> wrapper = new LambdaQueryWrapper<>();

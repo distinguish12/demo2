@@ -12,6 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -81,10 +82,10 @@ public class LearningProgressServiceImpl extends ServiceImpl<LearningProgressMap
 
         LambdaUpdateWrapper<LearningProgress> wrapper = new LambdaUpdateWrapper<>();
         wrapper.eq(LearningProgress::getUserId, userId)
-               .eq(LearningProgress::getLessonId, lessonId)
-               .set(LearningProgress::getProgress, 100)
-               .set(LearningProgress::getCompleted, 1)
-               .set(LearningProgress::getLastAccessTime, LocalDateTime.now());
+                .eq(LearningProgress::getLessonId, lessonId)
+                .set(LearningProgress::getProgress, 100)
+                .set(LearningProgress::getCompleted, 1)
+                .set(LearningProgress::getLastAccessTime, LocalDateTime.now());
 
         boolean success = update(wrapper);
         if (success) {
@@ -101,7 +102,7 @@ public class LearningProgressServiceImpl extends ServiceImpl<LearningProgressMap
 
         LambdaQueryWrapper<LearningProgress> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(LearningProgress::getUserId, userId)
-               .eq(LearningProgress::getLessonId, lessonId);
+                .eq(LearningProgress::getLessonId, lessonId);
 
         return getOne(wrapper);
     }
@@ -109,14 +110,14 @@ public class LearningProgressServiceImpl extends ServiceImpl<LearningProgressMap
     @Override
     public List<LearningProgress> getUserCourseProgress(Long userId, Long courseId) {
         if (userId == null || courseId == null) {
-            return List.of();
+            return Collections.emptyList();
         }
 
         // 这里需要通过关联查询获取课程下的所有课时进度
         // 暂时返回用户的全部学习进度，后续优化
         LambdaQueryWrapper<LearningProgress> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(LearningProgress::getUserId, userId)
-               .orderByDesc(LearningProgress::getLastAccessTime);
+                .orderByDesc(LearningProgress::getLastAccessTime);
 
         return list(wrapper);
     }

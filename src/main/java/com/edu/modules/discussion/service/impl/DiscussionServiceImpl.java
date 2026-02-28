@@ -12,6 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -93,7 +94,7 @@ public class DiscussionServiceImpl extends ServiceImpl<DiscussionMapper, Discuss
     @Override
     public List<Discussion> getDiscussionsByCourseId(Long courseId) {
         if (courseId == null) {
-            return List.of();
+            return Collections.emptyList();
         }
 
         LambdaQueryWrapper<Discussion> wrapper = new LambdaQueryWrapper<>();
@@ -169,7 +170,7 @@ public class DiscussionServiceImpl extends ServiceImpl<DiscussionMapper, Discuss
     @Override
     public List<Discussion> getHotDiscussions(Long courseId, Integer limit) {
         if (courseId == null) {
-            return List.of();
+            return Collections.emptyList();
         }
         if (limit == null || limit <= 0) {
             limit = 10;
